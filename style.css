@@ -1,0 +1,369 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blanc: #F7F2EA;
+  --beige: #E8DDD0;
+  --beige-fonce: #C8B99A;
+  --brun: #7A6A52;
+  --noir: #2A2A28;
+  --gris: #99948A;
+  --beige-clair: #EDE6DA;
+  --beige-card: #F0E9DF;
+  --vert: #4a7a4a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--blanc);
+  color: var(--noir);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  animation: fadeIn 0.35s ease;
+}
+.screen.active { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ACCUEIL */
+.accueil-wrapper {
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--beige-fonce);
+  margin-bottom: 1.4rem;
+  font-weight: 700;
+}
+
+.logo-titre {
+  font-size: clamp(2.4rem, 8vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--noir);
+  margin-bottom: 0.7rem;
+}
+.logo-titre span { color: var(--brun); }
+
+.logo-ville {
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 2.8rem;
+}
+
+.ligne-deco {
+  width: 40px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--beige-fonce);
+  margin: 0 auto 2.8rem;
+}
+
+.btns-accueil {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  align-items: center;
+  width: 100%;
+}
+
+/* BOUTONS */
+.btn-principal {
+  width: 100%;
+  max-width: 280px;
+  padding: 0.95rem 2rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--noir);
+  background: transparent;
+  border: 1.5px solid var(--beige-fonce);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.btn-principal:hover {
+  background: var(--beige-clair);
+  border-color: var(--brun);
+  color: var(--brun);
+  transform: translateY(-1px);
+}
+
+.btn-retour {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+  align-self: flex-start;
+  font-family: 'Nunito', sans-serif;
+}
+.btn-retour:hover { color: var(--noir); }
+.btn-retour::before { content: '← '; }
+
+.page-titre {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: var(--noir);
+}
+
+/* CONTACT */
+.contact-wrapper { max-width: 420px; width: 100%; }
+
+.contact-bloc {
+  background: var(--beige-clair);
+  padding: 2rem;
+  border-radius: 16px;
+  border-left: 3px solid var(--beige-fonce);
+}
+
+.contact-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+.contact-email { font-size: 1rem; color: var(--brun); font-weight: 700; }
+
+.horaire-ligne {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--beige);
+  font-size: 0.9rem;
+}
+.horaire-jour { color: var(--gris); }
+
+/* PRODUITS */
+.produits-wrapper { max-width: 420px; width: 100%; }
+.cats-grid { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1rem; }
+
+.produits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 820px;
+}
+
+.produit-card {
+  background: var(--beige-card);
+  border: 1.5px solid var(--beige);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.produit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.09);
+}
+
+.produit-img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+  background: var(--beige-clair);
+}
+
+.produit-info { padding: 1.2rem; }
+.produit-nom { font-size: 1.1rem; font-weight: 800; color: var(--noir); margin-bottom: 0.3rem; }
+.produit-prix { font-size: 0.95rem; color: var(--brun); font-weight: 700; margin-bottom: 0.2rem; }
+.produit-note { font-size: 0.75rem; color: var(--gris); font-style: italic; margin-bottom: 1rem; }
+
+.btn-reserver {
+  width: 100%;
+  padding: 0.75rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--brun);
+  color: var(--blanc);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-reserver:hover { background: var(--noir); transform: translateY(-1px); }
+
+/* RÉSERVATION */
+.resa-wrapper { max-width: 460px; width: 100%; }
+
+.resa-produit-tag {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--beige-fonce);
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+}
+
+.form-grid { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+.form-row { display: flex; gap: 1rem; }
+.form-row .form-group { flex: 1; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris);
+  font-weight: 700;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+  padding: 0.85rem 1.1rem;
+  border: 1.5px solid var(--beige);
+  background: var(--beige-card);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  color: var(--noir);
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 50px;
+  width: 100%;
+}
+input:focus { border-color: var(--brun); }
+
+.horaire-info {
+  font-size: 0.8rem;
+  color: var(--gris);
+  font-style: italic;
+  margin-top: 0.2rem;
+  padding-left: 0.5rem;
+}
+
+.prix-total {
+  background: var(--beige-clair);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--brun);
+  text-align: center;
+  display: none;
+}
+
+.btn-envoyer {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--noir);
+  color: var(--blanc);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+.btn-envoyer:hover { background: var(--brun); }
+.btn-envoyer:disabled { background: var(--vert); cursor: default; }
+
+.msg-ok {
+  display: none;
+  background: var(--beige-clair);
+  border-left: 3px solid var(--vert);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--noir);
+  margin-top: 0.5rem;
+  font-weight: 700;
+}
+
+/* HISTORIQUE */
+.histo-wrapper { max-width: 500px; width: 100%; }
+.histo-vide { text-align: center; color: var(--gris); font-size: 0.95rem; padding: 3rem 0; font-style: italic; }
+.histo-liste { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+
+.histo-item {
+  background: var(--beige-clair);
+  padding: 1.2rem 1.5rem;
+  border-radius: 14px;
+  border-left: 3px solid var(--beige-fonce);
+}
+.histo-produit { font-size: 1.05rem; font-weight: 800; color: var(--noir); margin-bottom: 0.3rem; }
+.histo-detail { font-size: 0.85rem; color: var(--gris); line-height: 1.9; }
+.histo-prix { font-size: 0.95rem; font-weight: 800; color: var(--brun); margin-top: 0.4rem; }
+
+.histo-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--vert);
+  color: white;
+  padding: 0.25rem 0.8rem;
+  border-radius: 50px;
+  margin-top: 0.6rem;
+}
+
+/* GUIDE IMAGES */
+.guide-images {
+  background: var(--beige-clair);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--noir);
+}
+
+@media (max-width: 600px) {
+  .produits-grid { grid-template-columns: 1fr; }
+  .form-row { flex-direction: column; }
+  .logo-titre { font-size: 2.4rem; }
+}
