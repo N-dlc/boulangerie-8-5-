@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boulangerie 5 — Rochefort-du-Gard</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<!-- ACCUEIL -->
+<div class="screen active" id="screen-accueil">
+  <div class="accueil-wrapper">
+    <p class="logo-tag">Artisan boulanger</p>
+    <h1 class="logo-titre">Boulangerie <span>5</span></h1>
+    <p class="logo-ville">Rochefort-du-Gard</p>
+    <div class="ligne-deco"></div>
+    <div class="btns-accueil">
+      <button class="btn-principal" onclick="aller('screen-produits')">Produits</button>
+      <button class="btn-principal" onclick="aller('screen-contact')">Contact</button>
+      <button class="btn-principal" onclick="aller('screen-historique')">Réservations</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="screen" id="screen-contact">
+  <div class="contact-wrapper">
+    <button class="btn-retour" onclick="aller('screen-accueil')">Retour</button>
+    <h2 class="page-titre">Contact</h2>
+    <div class="contact-bloc">
+      <p class="contact-label">Email</p>
+      <p class="contact-email">nino.delecluse2710@gmail.com</p>
+      <div style="margin-top:1.5rem;">
+        <p class="contact-label" style="margin-bottom:1rem;">Horaires d'ouverture</p>
+        <div class="horaire-ligne"><span class="horaire-jour">Lundi – Samedi</span><span>06h30 – 18h30</span></div>
+        <div class="horaire-ligne" style="border-bottom:none;"><span class="horaire-jour">Dimanche</span><span>06h30 – 12h30</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUITS CATÉGORIES -->
+<div class="screen" id="screen-produits">
+  <div class="produits-wrapper">
+    <button class="btn-retour" onclick="aller('screen-accueil')">Retour</button>
+    <h2 class="page-titre">Nos produits</h2>
+    <div class="cats-grid">
+      <button class="btn-principal" onclick="afficherCategorie('pain')">Pains</button>
+      <button class="btn-principal" onclick="afficherCategorie('patisserie')">Pâtisseries</button>
+      <button class="btn-principal" onclick="afficherCategorie('boisson')">Boissons</button>
+    </div>
+  </div>
+</div>
+
+<!-- LISTE PRODUITS -->
+<div class="screen" id="screen-liste">
+  <div style="width:100%;max-width:820px;display:flex;flex-direction:column;">
+    <button class="btn-retour" onclick="aller('screen-produits')">Retour</button>
+    <h2 class="page-titre" id="liste-titre"></h2>
+    <div class="produits-grid" id="produits-grid"></div>
+  </div>
+</div>
+
+<!-- FORMULAIRE RÉSERVATION -->
+<div class="screen" id="screen-resa">
+  <div class="resa-wrapper">
+    <button class="btn-retour" onclick="aller('screen-liste')">Retour</button>
+    <p class="resa-produit-tag">Réservation pour</p>
+    <h2 class="page-titre" id="resa-titre"></h2>
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" placeholder="Jean">
+        </div>
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" placeholder="Dupont">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="tel">Téléphone</label>
+        <input type="tel" id="tel" placeholder="06 00 00 00 00">
+      </div>
+      <div class="form-group" id="groupe-quantite" style="display:none;">
+        <label for="quantite" id="label-quantite">Nombre de personnes</label>
+        <input type="number" id="quantite" min="1" max="50" placeholder="1" oninput="calculerPrix()">
+      </div>
+      <div class="prix-total" id="prix-total"></div>
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" onchange="mettreAJourHoraires()">
+      </div>
+      <div class="form-group">
+        <label for="heure">Heure</label>
+        <input type="time" id="heure">
+        <span class="horaire-info" id="horaire-info"></span>
+      </div>
+      <button class="btn-envoyer" id="btn-envoyer" onclick="envoyerResa()">Confirmer la réservation</button>
+      <div class="msg-ok" id="msg-ok">✓ Réservation confirmée ! Un email vous a été envoyé.</div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORIQUE -->
+<div class="screen" id="screen-historique">
+  <div class="histo-wrapper">
+    <button class="btn-retour" onclick="aller('screen-accueil')">Retour</button>
+    <h2 class="page-titre">Mes réservations</h2>
+    <div id="histo-contenu"></div>
+  </div>
+</div>
+
+<script>
+  emailjs.init('6yctvBxWNUu6-w0Rb');
+
+  // =====================================================
+  // IMAGES :
+  // Les images sont dans le MÊME dossier que index.html
+  // (pas de dossier "images")
+  // =====================================================
+  const IMAGES = {
+    baguette:      'baguette.jpg',
+    pain_graines:  'pain-graines.jpg',
+    pain_complet:  'pain-complet.jpg',
+    tarte_fraises: 'tarte-fraises.jpg',
+    tarte_choco:   'tarte-chocolat.jpg',
+    cookie:        'cookie.jpg',
+    soda:          'soda.jpg',
+    cafe:          'cafe.jpg',
+    the:           'the.jpg'
+  };
+  // =====================================================
+  // PRODUITS — ne pas modifier sauf les prix et noms
+  // =====================================================
+  const PRODUITS = {
+    pain: {
+      titre: 'Nos pains',
+      items: [
+        { id: 0, nom: 'Baguette tradition', prix: 1.10, affichePrix: '1,10 €', note: "l'unité",  imgKey: 'baguette',     resa: false },
+        { id: 1, nom: 'Pain aux graines',   prix: 1.20, affichePrix: '1,20 €', note: "l'unité",  imgKey: 'pain_graines', resa: false },
+        { id: 2, nom: 'Pain complet',        prix: 1.20, affichePrix: '1,20 €', note: "l'unité",  imgKey: 'pain_complet', resa: false }
+      ]
+    },
+    patisserie: {
+      titre: 'Nos pâtisseries',
+      items: [
+        { id: 3, nom: 'Tarte aux fraises', prix: 3.50, affichePrix: '3,50 €', note: 'par personne', imgKey: 'tarte_fraises', resa: true, typeQte: 'personnes' },
+        { id: 4, nom: 'Tarte au chocolat', prix: 3.50, affichePrix: '3,50 €', note: 'par personne', imgKey: 'tarte_choco',   resa: true, typeQte: 'personnes' },
+        { id: 5, nom: 'Cookie',             prix: 1.80, affichePrix: '1,80 €', note: "l'unité",     imgKey: 'cookie',        resa: true, typeQte: 'cookies'   }
+      ]
+    },
+    boisson: {
+      titre: 'Nos boissons',
+      items: [
+        { id: 6, nom: 'Soda', prix: 2.00, affichePrix: '2,00 €', note: 'la bouteille', imgKey: 'soda', resa: false },
+        { id: 7, nom: 'Café', prix: 1.00, affichePrix: '1,00 €', note: 'la tasse',     imgKey: 'cafe', resa: false },
+        { id: 8, nom: 'Thé',  prix: 3.00, affichePrix: '3,00 €', note: 'la théière',   imgKey: 'the',  resa: false }
+      ]
+    }
+  };
+
+  let produitEnCours = null;
+  let reservations = JSON.parse(localStorage.getItem('b5_resa') || '[]');
+
+  function aller(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 'screen-historique') afficherHistorique();
+  }
+
+  function afficherCategorie(cat) {
+    const data = PRODUITS[cat];
+    document.getElementById('liste-titre').textContent = data.titre;
+    const grid = document.getElementById('produits-grid');
+    grid.innerHTML = '';
+
+    data.items.forEach(function(p) {
+      const card = document.createElement('div');
+      card.className = 'produit-card';
+
+      const img = document.createElement('img');
+      img.className = 'produit-img';
+      img.src = IMAGES[p.imgKey];
+      img.alt = p.nom;
+
+      const info = document.createElement('div');
+      info.className = 'produit-info';
+
+      const nom = document.createElement('p');
+      nom.className = 'produit-nom';
+      nom.textContent = p.nom;
+
+      const prix = document.createElement('p');
+      prix.className = 'produit-prix';
+      prix.textContent = p.affichePrix;
+
+      const note = document.createElement('p');
+      note.className = 'produit-note';
+      note.textContent = p.note;
+
+      info.appendChild(nom);
+      info.appendChild(prix);
+      info.appendChild(note);
+
+      if (p.resa) {
+        const btn = document.createElement('button');
+        btn.className = 'btn-reserver';
+        btn.textContent = 'Réserver';
+        btn.addEventListener('click', function() { ouvrirResa(p); });
+        info.appendChild(btn);
+      }
+
+      card.appendChild(img);
+      card.appendChild(info);
+      grid.appendChild(card);
+    });
+
+    aller('screen-liste');
+  }
+
+  function ouvrirResa(produit) {
+    produitEnCours = produit;
+    document.getElementById('resa-titre').textContent = produit.nom;
+    ['prenom','nom','tel','date','heure','quantite'].forEach(function(id) {
+      document.getElementById(id).value = '';
+    });
+
+    var groupeQte = document.getElementById('groupe-quantite');
+    var labelQte  = document.getElementById('label-quantite');
+    var prixTotal = document.getElementById('prix-total');
+
+    if (produit.typeQte === 'personnes') {
+      groupeQte.style.display = 'flex';
+      labelQte.textContent = 'Nombre de personnes';
+      prixTotal.style.display = 'none';
+    } else if (produit.typeQte === 'cookies') {
+      groupeQte.style.display = 'flex';
+      labelQte.textContent = 'Nombre de cookies';
+      prixTotal.style.display = 'none';
+    } else {
+      groupeQte.style.display = 'none';
+      prixTotal.style.display = 'none';
+    }
+
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').min = today;
+    document.getElementById('horaire-info').textContent = '';
+
+    var heureInput = document.getElementById('heure');
+    heureInput.min = '06:30';
+    heureInput.max = '18:30';
+
+    var btn = document.getElementById('btn-envoyer');
+    btn.disabled = false;
+    btn.textContent = 'Confirmer la réservation';
+    btn.style.background = '';
+    document.getElementById('msg-ok').style.display = 'none';
+
+    aller('screen-resa');
+  }
+
+  function mettreAJourHoraires() {
+    var dateVal = document.getElementById('date').value;
+    if (!dateVal) return;
+
+    var date = new Date(dateVal + 'T12:00:00');
+    var jourSemaine = date.getDay();
+    var heureInput = document.getElementById('heure');
+    var infoEl = document.getElementById('horaire-info');
+
+    if (jourSemaine === 0) {
+      heureInput.min = '06:30';
+      heureInput.max = '12:30';
+      infoEl.textContent = 'Dimanche : ouvert de 06h30 à 12h30';
+      if (heureInput.value > '12:30') heureInput.value = '';
+    } else {
+      heureInput.min = '06:30';
+      heureInput.max = '18:30';
+      infoEl.textContent = 'Lundi – Samedi : ouvert de 06h30 à 18h30';
+    }
+  }
+
+  function calculerPrix() {
+    if (!produitEnCours) return;
+    var qte = parseInt(document.getElementById('quantite').value) || 0;
+    var prixEl = document.getElementById('prix-total');
+    if (qte > 0) {
+      var total = (produitEnCours.prix * qte).toFixed(2).replace('.', ',');
+      var label = produitEnCours.typeQte === 'cookies'
+        ? (qte > 1 ? 'cookies' : 'cookie')
+        : (qte > 1 ? 'personnes' : 'personne');
+      prixEl.textContent = 'Total : ' + qte + ' ' + label + ' x ' + produitEnCours.affichePrix + ' = ' + total + ' EUR';
+      prixEl.style.display = 'block';
+    } else {
+      prixEl.style.display = 'none';
+    }
+  }
+
+  function envoyerResa() {
+    var prenom = document.getElementById('prenom').value.trim();
+    var nom    = document.getElementById('nom').value.trim();
+    var tel    = document.getElementById('tel').value.trim();
+    var date   = document.getElementById('date').value;
+    var heure  = document.getElementById('heure').value;
+    var qte    = document.getElementById('quantite').value;
+
+    if (!prenom || !nom || !tel || !date || !heure) {
+      alert('Merci de remplir tous les champs avant de confirmer.');
+      return;
+    }
+    if (produitEnCours.typeQte && (!qte || parseInt(qte) < 1)) {
+      alert('Merci d\'indiquer la quantite souhaitee.');
+      return;
+    }
+
+    var jourSemaine = new Date(date + 'T12:00:00').getDay();
+    if (jourSemaine === 0 && heure > '12:30') {
+      alert('Le dimanche, nous fermons a 12h30. Merci de choisir une heure avant 12h30.');
+      return;
+    }
+    if (heure < '06:30') {
+      alert('Nous ouvrons a 06h30. Merci de choisir une heure apres l\'ouverture.');
+      return;
+    }
+
+    var btn = document.getElementById('btn-envoyer');
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+
+    var dateFormatee = new Date(date + 'T12:00:00').toLocaleDateString('fr-FR', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    var qteTexte  = 'N/A';
+    var totalTexte = 'N/A';
+    if (produitEnCours.typeQte && qte) {
+      var total = (produitEnCours.prix * parseInt(qte)).toFixed(2).replace('.', ',');
+      var label = produitEnCours.typeQte === 'cookies' ? 'cookie(s)' : 'personne(s)';
+      qteTexte   = qte + ' ' + label;
+      totalTexte = total + ' EUR';
+    }
+
+    emailjs.send('service_l9hy8k5', 'template_1mcdtex', {
+      to_email:  'nino.delecluse2710@gmail.com',
+      prenom:    prenom,
+      nom:       nom,
+      telephone: tel,
+      produit:   produitEnCours.nom,
+      quantite:  qteTexte,
+      total:     totalTexte,
+      date:      dateFormatee,
+      heure:     heure
+    }).then(function() {
+      reservations.push({
+        produit:  produitEnCours.nom,
+        prenom:   prenom,
+        nom:      nom,
+        tel:      tel,
+        date:     dateFormatee,
+        heure:    heure,
+        quantite: qteTexte,
+        total:    totalTexte
+      });
+      localStorage.setItem('b5_resa', JSON.stringify(reservations));
+      btn.textContent = 'Confirme !';
+      btn.style.background = '#4a7a4a';
+      document.getElementById('msg-ok').style.display = 'block';
+    }).catch(function() {
+      btn.disabled = false;
+      btn.textContent = 'Confirmer la reservation';
+      alert('Erreur lors de l\'envoi. Verifiez votre connexion et reessayez.');
+    });
+  }
+
+  function afficherHistorique() {
+    var el = document.getElementById('histo-contenu');
+    if (!reservations.length) {
+      el.innerHTML = '<p class="histo-vide">Aucune reservation pour le moment.</p>';
+      return;
+    }
+    var html = '<div class="histo-liste">';
+    var liste = reservations.slice().reverse();
+    liste.forEach(function(r) {
+      html += '<div class="histo-item">';
+      html += '<p class="histo-produit">' + r.produit + '</p>';
+      html += '<p class="histo-detail">' + r.prenom + ' ' + r.nom + '<br>' + r.date + ' a ' + r.heure + '<br>Tel : ' + r.tel;
+      if (r.quantite && r.quantite !== 'N/A') html += '<br>Quantite : ' + r.quantite;
+      html += '</p>';
+      if (r.total && r.total !== 'N/A') html += '<p class="histo-prix">Total : ' + r.total + '</p>';
+      html += '<span class="histo-badge">Confirme</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+</script>
+</body>
+</html>
